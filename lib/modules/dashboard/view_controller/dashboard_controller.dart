@@ -6,8 +6,19 @@ import '../service/dashboard_service.dart';
 class DashboardController extends GetxController {
   final DashboardService _service = DashboardService();
 
-  final isLoading = false.obs;
-  final dashboard = DashboardModel.empty().obs;
+  final RxBool isLoading = false.obs;
+
+  final Rx<DashboardModel> dashboard =
+      DashboardModel.empty().obs;
+
+  final RxList<Map<String, dynamic>> statusChart =
+      <Map<String, dynamic>>[].obs;
+
+  final RxList<Map<String, dynamic>> categoryChart =
+      <Map<String, dynamic>>[].obs;
+
+  final RxList<Map<String, dynamic>> recentActivities =
+      <Map<String, dynamic>>[].obs;
 
   @override
   void onInit() {
@@ -18,9 +29,26 @@ class DashboardController extends GetxController {
   Future<void> loadDashboard() async {
     try {
       isLoading.value = true;
-      dashboard.value = await _service.fetchDashboard();
+
+      dashboard.value =
+      await _service.getDashboard();
+
+      statusChart.assignAll(
+        await _service.getStatusChart(),
+      );
+
+      categoryChart.assignAll(
+        await _service.getCategoryChart(),
+      );
+
+      recentActivities.assignAll(
+        await _service.getRecentActivities(),
+      );
     } catch (e) {
-      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
+      Get.snackbar(
+        "Dashboard Error",
+        e.toString(),
+      );
     } finally {
       isLoading.value = false;
     }
