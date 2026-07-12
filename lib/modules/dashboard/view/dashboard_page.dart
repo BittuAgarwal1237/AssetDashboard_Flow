@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'widgets/notification_badge.dart';
+import '../../../core/responsive.dart';
 import '../view_controller/dashboard_controller.dart';
 import 'widgets/dashboard_header.dart';
 import 'widgets/activity_list.dart';
@@ -16,216 +16,215 @@ class DashboardPage extends GetView<DashboardController> {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.adaptiveSpacing;
+
     return Scaffold(
-        backgroundColor: const Color(0xffF5F7FA),
-
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: false,
-          title: const Text(
-            "Dashboard",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+      backgroundColor: const Color(0xffF5F7FA),
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        title: Text(
+          "Dashboard",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 22 * context.fontScale,
+            fontWeight: FontWeight.bold,
           ),
-          actions: [
-            IconButton(
-              onPressed: controller.refreshDashboard,
-              icon: const Icon(Icons.refresh),
-            ),
-            const SizedBox(width: 8),
-          ],
         ),
+        actions: [
+          IconButton(
+            onPressed: controller.refreshDashboard,
+            icon: const Icon(Icons.refresh),
+          ),
+          const SizedBox(width: 8),
+        ],
+      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
 
-        body: Obx(() {
+        final data = controller.dashboard.value;
 
-          if (controller.isLoading.value) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+        return RefreshIndicator(
+          onRefresh: controller.refreshDashboard,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: context.adaptiveHPadding,
+            child: Column(
+              children: [
+                const DashboardHeader(),
 
-          final data = controller.dashboard.value;
+                SizedBox(height: spacing),
 
-          return RefreshIndicator(
-              onRefresh: controller.refreshDashboard,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(20),
-
-                child: Column(
-                  children: [
-                    const DashboardHeader(),
-
-                    const SizedBox(height:20),
-
-                  GridView.count(
+                GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-
-                  crossAxisCount: 4,
-
-                  crossAxisSpacing: 20,
-
-                  mainAxisSpacing: 20,
-
-                  childAspectRatio: 1.5,
-
+                  crossAxisCount: context.gridColumns,
+                  crossAxisSpacing: spacing,
+                  mainAxisSpacing: spacing,
+                  childAspectRatio: context.useCompactMode ? 1.1 : 1.5,
                   children: [
-
                     SummaryCard(
                       title: "Total Assets",
                       value: data.totalAssets.toString(),
                       icon: Icons.laptop_mac,
                       color: Colors.blue,
                     ),
-
                     SummaryCard(
                       title: "Allocated",
                       value: data.allocatedAssets.toString(),
                       icon: Icons.person_outline,
                       color: Colors.green,
                     ),
-
                     SummaryCard(
                       title: "Available",
                       value: data.availableAssets.toString(),
                       icon: Icons.inventory_2_outlined,
                       color: Colors.orange,
                     ),
-
                     SummaryCard(
                       title: "Maintenance",
                       value: data.maintenanceAssets.toString(),
                       icon: Icons.build_circle_outlined,
                       color: Colors.red,
                     ),
-
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: spacing),
 
-                Row(
+                context.isMobileScreen
+                    ? Column(
+                  children: [
+                    AssetStatusChart(data: data.assetStatusList),
+                    SizedBox(height: spacing),
+                    CategoryChart(data: data.categoryDataList),
+                  ],
+                )
+                    : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-
+                  children: [
                     Expanded(
                       flex: 2,
-                      child: AssetStatusChart(),
+                      child: AssetStatusChart(data: data.assetStatusList),
                     ),
-
-                    SizedBox(width: 20),
-
+                    SizedBox(width: spacing),
                     Expanded(
                       flex: 2,
-                      child: CategoryChart(),
+                      child: CategoryChart(data: data.categoryDataList),
                     ),
-
                   ],
                 ),
 
-                const SizedBox(height: 20),
+                SizedBox(height: spacing),
+
+                context.isMobileScreen
+                    ? Column(
+                  children: [
+                    const QuickActions(),
+                    SizedBox(height: spacing),
+                    WarrantyCard(items: data.warrantyItems),
+                  ],
+                )
+                    : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Expanded(child: QuickActions()),
+                    SizedBox(width: spacing),
+                    Expanded(child: WarrantyCard(items: data.warrantyItems)),
+                  ],
+                ),
+
+                SizedBox(height: spacing),
+
+                context.isMobileScreen
+                    ? Column(
+                  children: [
+                    ActivityList(items: data.recentActivities),
+                    SizedBox(height: spacing),
+                    LowStockCard(items: data.lowStockItems),
+                  ],
+                )
+                    : Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: ActivityList(items: data.recentActivities),
+                    ),
+                    SizedBox(width: spacing),
+                    Expanded(child: LowStockCard(items: data.lowStockItems)),
+                  ],
+                ),
+
+                SizedBox(height: spacing),
 
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-
+                  children: [
                     Expanded(
-                      child: QuickActions(),
-                    ),
-
-                    SizedBox(width: 20),
-
-                    Expanded(
-                      child: WarrantyCard(),
-                    ),
-
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Expanded(
-                          flex: 2,
-                          child: ActivityList(),
+                      child: Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        SizedBox(width: 20),
-                        Expanded(
-                          child: LowStockCard(),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Card(
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(18),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "System Overview",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 15),
-                                  ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Icon(
-                                      Icons.business,
-                                      color: Colors.blue,
-                                    ),
-                                    title: Text("Departments"),
-                                    trailing: Text("08"),
-                                  ),
-                                  ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Icon(
-                                      Icons.people,
-                                      color: Colors.green,
-                                    ),
-                                    title: Text("Employees"),
-                                    trailing: Text("164"),
-                                  ),
-                                  ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Icon(
-                                      Icons.devices,
-                                      color: Colors.orange,
-                                    ),
-                                    title: Text("Active Assets"),
-                                    trailing: Text("980"),
-                                  ),
-                                ],
+                        child: Padding(
+                          padding: EdgeInsets.all(context.adaptivePadding),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                "System Overview",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 15),
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(
+                                  Icons.business,
+                                  color: Colors.blue,
+                                ),
+                                title: const Text("Departments"),
+                                trailing: Text(data.departments.toString().padLeft(2, '0')),
+                              ),
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(
+                                  Icons.people,
+                                  color: Colors.green,
+                                ),
+                                title: const Text("Employees"),
+                                trailing: Text(data.employees.toString()),
+                              ),
+                              ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(
+                                  Icons.devices,
+                                  color: Colors.orange,
+                                ),
+                                title: const Text("Active Assets"),
+                                trailing: Text(data.totalAssets.toString()),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
-
-                    const SizedBox(height: 30),
                   ],
                 ),
-              ),
-          );
-        }),
+
+                SizedBox(height: spacing * 1.5),
+              ],
+            ),
+          ),
+        );
+      }),
     );
   }
 }

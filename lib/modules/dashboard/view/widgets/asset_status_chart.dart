@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
+import '../../model/dashboard_model.dart';
+
 class AssetStatusChart extends StatelessWidget {
-  const AssetStatusChart({super.key});
+  final List<AssetStatusData> data;
+
+  const AssetStatusChart({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    final List<_ChartData> data = [
-      _ChartData('Assigned', 980, Colors.blue),
-      _ChartData('Available', 210, Colors.green),
-      _ChartData('Repair', 25, Colors.orange),
-      _ChartData('Scrap', 18, Colors.grey),
-      _ChartData('Lost', 7, Colors.red),
-    ];
-
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -25,7 +21,6 @@ class AssetStatusChart extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             const Text(
               "Asset Status",
               style: TextStyle(
@@ -33,9 +28,7 @@ class AssetStatusChart extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 20),
-
             SizedBox(
               height: 280,
               child: SfCircularChart(
@@ -46,11 +39,20 @@ class AssetStatusChart extends StatelessWidget {
                 ),
                 tooltipBehavior: TooltipBehavior(enable: true),
                 series: <CircularSeries>[
-                  DoughnutSeries<_ChartData, String>(
+                  DoughnutSeries<AssetStatusData, String>(
                     dataSource: data,
-                    xValueMapper: (_ChartData data, _) => data.title,
-                    yValueMapper: (_ChartData data, _) => data.value,
-                    pointColorMapper: (_ChartData data, _) => data.color,
+                    xValueMapper: (AssetStatusData d, _) => d.title,
+                    yValueMapper: (AssetStatusData d, _) => d.value,
+                    pointColorMapper: (AssetStatusData d, _) {
+                      switch (d.title.toLowerCase()) {
+                        case 'assigned': return Colors.blue;
+                        case 'available': return Colors.green;
+                        case 'repair': return Colors.orange;
+                        case 'scrap': return Colors.grey;
+                        case 'lost': return Colors.red;
+                        default: return Colors.blueGrey;
+                      }
+                    },
                     innerRadius: '70%',
                     dataLabelSettings: const DataLabelSettings(
                       isVisible: true,
@@ -64,16 +66,4 @@ class AssetStatusChart extends StatelessWidget {
       ),
     );
   }
-}
-
-class _ChartData {
-  final String title;
-  final double value;
-  final Color color;
-
-  _ChartData(
-      this.title,
-      this.value,
-      this.color,
-      );
-}
+}

@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../model/dashboard_model.dart';
+
 class ActivityList extends StatelessWidget {
-  const ActivityList({super.key});
+  final List<ActivityItem> items;
+
+  const ActivityList({super.key, required this.items});
 
   @override
   Widget build(BuildContext context) {
-    final activities = [
-      ("Laptop assigned to Rahul", "2 min ago", Colors.blue),
-      ("Printer sent to repair", "10 min ago", Colors.orange),
-      ("Mouse returned", "25 min ago", Colors.green),
-      ("Monitor added", "1 hour ago", Colors.purple),
-      ("Laptop scrapped", "Yesterday", Colors.red),
-    ];
-
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -32,21 +28,35 @@ class ActivityList extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            ...activities.map(
-                  (e) => ListTile(
-                dense: true,
-                contentPadding: EdgeInsets.zero,
-                leading: CircleAvatar(
-                  radius: 8,
-                  backgroundColor: e.$3,
+            if (items.isEmpty)
+              const Text("No recent activities")
+            else
+              ...items.map(
+                (e) => ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    radius: 8,
+                    backgroundColor: _getColor(e.type),
+                  ),
+                  title: Text(e.description),
+                  subtitle: Text(e.timeText),
                 ),
-                title: Text(e.$1),
-                subtitle: Text(e.$2),
               ),
-            ),
           ],
         ),
       ),
     );
+  }
+
+  Color _getColor(String type) {
+    switch (type.toLowerCase()) {
+      case 'added': return Colors.green;
+      case 'removed':
+      case 'scrapped': return Colors.red;
+      case 'repair': return Colors.orange;
+      case 'assigned': return Colors.blue;
+      default: return Colors.purple;
+    }
   }
 }

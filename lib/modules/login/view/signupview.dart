@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../view_controller/auth_controller.dart';
 import '../../../core/responsive.dart';
-import '../../dashboard/view/dashboard_page.dart';
-import '../../dashboard/dashboard_binding.dart';
+
 
 class SignupView extends StatefulWidget {
   const SignupView({super.key});
@@ -42,11 +41,11 @@ class _SignupViewState extends State<SignupView> {
 
     if (success && mounted) {
       Get.snackbar(
-        'Success',
-        'Account created Successfully.',
+        'Confirm your email from Mail box',
+        'We had send you email',
+        duration: const Duration(seconds: 5),
       );
-      Get.offAll(() => const DashboardPage(), binding: DashboardBinding());
-
+      Get.back();
     }
   }
 
