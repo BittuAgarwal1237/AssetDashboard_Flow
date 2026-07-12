@@ -84,8 +84,8 @@ class DashboardPage extends GetView<DashboardController> {
                     ),
 
                     SummaryCard(
-                      title: "Assigned",
-                      value: data.assignedAssets.toString(),
+                      title: "Allocated",
+                      value: data.allocatedAssets.toString(),
                       icon: Icons.person_outline,
                       color: Colors.green,
                     ),
@@ -98,8 +98,8 @@ class DashboardPage extends GetView<DashboardController> {
                     ),
 
                     SummaryCard(
-                      title: "Repair",
-                      value: data.repairAssets.toString(),
+                      title: "Maintenance",
+                      value: data.maintenanceAssets.toString(),
                       icon: Icons.build_circle_outlined,
                       color: Colors.red,
                     ),

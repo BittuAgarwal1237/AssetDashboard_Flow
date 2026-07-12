@@ -1,13 +1,13 @@
 import 'package:get/get.dart';
 
 import '../model/dashboard_model.dart';
+import '../service/dashboard_service.dart';
 
 class DashboardController extends GetxController {
-  // Loading State
-  final RxBool isLoading = false.obs;
+  final DashboardService _service = DashboardService();
 
-  // Dashboard Data
-  final Rx<DashboardModel> dashboard = DashboardModel.empty().obs;
+  final isLoading = false.obs;
+  final dashboard = DashboardModel.empty().obs;
 
   @override
   void onInit() {
@@ -18,24 +18,9 @@ class DashboardController extends GetxController {
   Future<void> loadDashboard() async {
     try {
       isLoading.value = true;
-
-      // Simulate API Delay
-      await Future.delayed(const Duration(milliseconds: 600));
-
-      dashboard.value = const DashboardModel(
-        totalAssets: 1240,
-        assignedAssets: 980,
-        availableAssets: 210,
-        repairAssets: 25,
-        scrapAssets: 18,
-        lostAssets: 7,
-      );
+      dashboard.value = await _service.fetchDashboard();
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      Get.snackbar('Error', e.toString(), snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
     }

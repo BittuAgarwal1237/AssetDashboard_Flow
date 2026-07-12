@@ -6,7 +6,8 @@ class DashboardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(22),
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(18),
         gradient: const LinearGradient(
@@ -18,29 +19,29 @@ class DashboardHeader extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(
+          const Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
+              children: [
                 Text(
-                  "Good Morning 👋",
+                  "Welcome Back 👋",
                   style: TextStyle(
                     color: Colors.white70,
                     fontSize: 16,
                   ),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  "Welcome Back, Admin",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 28,
-                  ),
-                ),
                 SizedBox(height: 10),
                 Text(
-                  "Manage all IT Assets from one place.",
+                  "IT Asset Dashboard",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  "Monitor all company assets in one place.",
                   style: TextStyle(
                     color: Colors.white70,
                   ),
@@ -49,14 +50,14 @@ class DashboardHeader extends StatelessWidget {
             ),
           ),
           CircleAvatar(
-            radius: 35,
+            radius: 34,
             backgroundColor: Colors.white24,
             child: Icon(
               Icons.admin_panel_settings,
               color: Colors.white,
-              size: 36,
+              size: 34,
             ),
-          )
+          ),
         ],
       ),
     );
