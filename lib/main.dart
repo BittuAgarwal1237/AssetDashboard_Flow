@@ -3,6 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
 import 'config/Supabaseconfig.dart';
+import 'package:get/get.dart';
+
+import 'routes/app_pages.dart';
+import 'routes/app_routes.dart';
 
 // Global Supabase client instance jise aap pure app mein kahin bhi use kar sakte hain
 final supabase = Supabase.instance.client;
@@ -30,7 +34,7 @@ class AssetFlowApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'AssetFlow',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -38,14 +42,34 @@ class AssetFlowApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // Dashboard hata kar ek normal initial screen de di hai jahan se aap shuru kar sakte hain
-      home: const Scaffold(
-        body: Center(
-          child: Text(
-            'Firebase & Supabase Initialized Successfully!',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
+      initialRoute: AppRoutes.dashboard,
+
+      getPages: AppPages.routes,
     );
   }
 }
+
+
+
+// class AssetFlowApp extends StatelessWidget {
+//   const AssetFlowApp({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return GetMaterialApp(
+//       title: 'AssetFlow',
+//       debugShowCheckedModeBanner: false,
+//
+//       theme: ThemeData(
+//         colorScheme: ColorScheme.fromSeed(
+//           seedColor: Colors.indigo,
+//         ),
+//         useMaterial3: true,
+//       ),
+//
+//       initialRoute: AppRoutes.dashboard,
+//
+//       getPages: AppPages.routes,
+//     );
+//   }
+// }
