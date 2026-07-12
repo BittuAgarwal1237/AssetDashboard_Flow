@@ -12,15 +12,6 @@ class DashboardController extends GetxController {
   final Rx<DashboardModel> dashboard =
       DashboardModel.empty().obs;
 
-  final RxList<Map<String, dynamic>> statusChart =
-      <Map<String, dynamic>>[].obs;
-
-  final RxList<Map<String, dynamic>> categoryChart =
-      <Map<String, dynamic>>[].obs;
-
-  final RxList<Map<String, dynamic>> recentActivities =
-      <Map<String, dynamic>>[].obs;
-
   @override
   void onInit() {
     super.onInit();
@@ -30,21 +21,7 @@ class DashboardController extends GetxController {
   Future<void> loadDashboard() async {
     try {
       isLoading.value = true;
-
-      dashboard.value =
-      await _service.getDashboard();
-
-      statusChart.assignAll(
-        await _service.getStatusChart(),
-      );
-
-      categoryChart.assignAll(
-        await _service.getCategoryChart(),
-      );
-
-      recentActivities.assignAll(
-        await _service.getRecentActivities(),
-      );
+      dashboard.value = await _service.fetchDashboard();
     } catch (e) {
       Get.snackbar(
         "Dashboard Error",
