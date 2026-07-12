@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'widgets/notification_badge.dart';
 import '../view_controller/dashboard_controller.dart';
-
+import 'widgets/dashboard_header.dart';
 import 'widgets/activity_list.dart';
 import 'widgets/asset_status_chart.dart';
 import 'widgets/category_chart.dart';
@@ -58,6 +58,9 @@ class DashboardPage extends GetView<DashboardController> {
 
                 child: Column(
                   children: [
+                    const DashboardHeader(),
+
+                    const SizedBox(height:20),
 
                   GridView.count(
                   shrinkWrap: true,
