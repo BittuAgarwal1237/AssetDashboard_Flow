@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "311897494492",
+    "project_id": "assetflow-7a811",
+    "storage_bucket": "assetflow-7a811.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311897494492:android:e9294749c82158b4b7f519",
+        "android_client_info": {
+          "package_name": "com.example.assetdashboard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCE9cZwbhlzsW6cxhJocc9TtTliEt4-PEE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
